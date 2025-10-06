@@ -1,21 +1,28 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
-from sqlalchemy import inspect
 from wtforms import StringField, FloatField, DateField, SubmitField
 from wtforms.validators import DataRequired
 from datetime import datetime
 import os
+from sqlalchemy import create_engine, inspect  # Added for DB check
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'  # Change this to a random string for security
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///milk_tracker.db'
+
+# Use environment variable for DB URI (PostgreSQL on Render, fallback to SQLite)
+db_uri = os.environ.get('DATABASE_URL', 'sqlite:///milk_tracker.db')
+if db_uri.startswith('postgres://'):
+    db_uri = db_uri.replace('postgres://', 'postgresql://', 1)
+app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-with app.app_context():
-    inspector = inspect(db.engine)
-    if not inspector.has_table("family"):  # Check for one of your tables
+# Initialize database tables if they don't exist
+engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
+inspector = inspect(engine)
+if not inspector.has_table('family'):
+    with app.app_context():
         db.create_all()
 
 # Database Models
@@ -76,6 +83,7 @@ def add_family():
 def log_distribution():
     form = DistributionForm()
     if form.validate_on_submit():
+        # Cast family_id to int
         dist = Distribution(family_id=int(form.family_id.data), date=form.date.data, liters=form.liters.data, amount=form.amount.data)
         db.session.add(dist)
         db.session.commit()
@@ -86,6 +94,7 @@ def log_distribution():
 def record_payment():
     form = PaymentForm()
     if form.validate_on_submit():
+        # Cast family_id to int
         payment = Payment(family_id=int(form.family_id.data), date=form.date.data, amount_paid=form.amount_paid.data)
         db.session.add(payment)
         db.session.commit()
@@ -103,7 +112,4 @@ def view_family(family_id):
     return render_template('view_family.html', family=family, distributions=distributions, payments=payments, balance=balance)
 
 if __name__ == '__main__':
-    with app.app_context():
-        if not os.path.exists('milk_tracker.db'):
-            db.create_all()
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
