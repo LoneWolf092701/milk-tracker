@@ -6,6 +6,7 @@ from wtforms.validators import DataRequired
 from datetime import datetime
 import os
 from sqlalchemy import create_engine, inspect  # Added for DB check
+import logging  # For debug logs
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'  # Change this to a random string for security
@@ -18,14 +19,11 @@ app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-# Initialize database tables if they don't exist
-engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
-inspector = inspect(engine)
-if not inspector.has_table('family'):
-    with app.app_context():
-        db.create_all()
+# Set up logging for debugging
+logging.basicConfig(level=logging.INFO)
+app.logger.info(f"Using database URI: {db_uri}")
 
-# Database Models
+# Database Models (define before init)
 class Family(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -43,6 +41,16 @@ class Payment(db.Model):
     family_id = db.Column(db.Integer, db.ForeignKey('family.id'), nullable=False)
     date = db.Column(db.Date, nullable=False)
     amount_paid = db.Column(db.Float, nullable=False)
+
+# Initialize database tables if they don't exist (moved after models)
+engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
+inspector = inspect(engine)
+if not inspector.has_table('family'):
+    with app.app_context():
+        db.create_all()
+    app.logger.info("Database tables created.")
+else:
+    app.logger.info("Database tables already exist.")
 
 # Forms
 class FamilyForm(FlaskForm):
