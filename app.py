@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
+from sqlalchemy import inspect
 from wtforms import StringField, FloatField, DateField, SubmitField
 from wtforms.validators import DataRequired
 from datetime import datetime
@@ -11,6 +12,11 @@ app.config['SECRET_KEY'] = 'your_secret_key'  # Change this to a random string f
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///milk_tracker.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+
+with app.app_context():
+    inspector = inspect(db.engine)
+    if not inspector.has_table("family"):  # Check for one of your tables
+        db.create_all()
 
 # Database Models
 class Family(db.Model):
@@ -70,7 +76,7 @@ def add_family():
 def log_distribution():
     form = DistributionForm()
     if form.validate_on_submit():
-        dist = Distribution(family_id=form.family_id.data, date=form.date.data, liters=form.liters.data, amount=form.amount.data)
+        dist = Distribution(family_id=int(form.family_id.data), date=form.date.data, liters=form.liters.data, amount=form.amount.data)
         db.session.add(dist)
         db.session.commit()
         return redirect(url_for('index'))
@@ -80,7 +86,7 @@ def log_distribution():
 def record_payment():
     form = PaymentForm()
     if form.validate_on_submit():
-        payment = Payment(family_id=form.family_id.data, date=form.date.data, amount_paid=form.amount_paid.data)
+        payment = Payment(family_id=int(form.family_id.data), date=form.date.data, amount_paid=form.amount_paid.data)
         db.session.add(payment)
         db.session.commit()
         return redirect(url_for('index'))
