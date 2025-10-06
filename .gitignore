@@ -1,0 +1,31 @@
+# Python virtual environment
+venv/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Database files
+*.db
+*.sqlite3
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Editor/IDE files
+.vscode/
+.idea/
+
+# Environment variables
+.env
+
+# Static files (if you add uploads later)
+static/uploads/
