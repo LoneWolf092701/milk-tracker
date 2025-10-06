@@ -1,0 +1,41 @@
+body {
+    background-color: #f8f9fa;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+}
+
+h1, h2 {
+    color: #007bff;
+}
+
+.btn {
+    font-size: 1.1rem; /* Larger buttons for mobile touch */
+    margin-bottom: 0.5rem;
+}
+
+.form-control {
+    font-size: 1rem;
+}
+
+@media (max-width: 576px) {
+    .container {
+        padding: 1rem; /* More padding on small screens */
+    }
+    h1 {
+        font-size: 1.5rem; /* Smaller headings on mobile */
+    }
+    table {
+        font-size: 0.9rem; /* Adjust table text for mobile */
+    }
+}
+
+/* Custom table styling */
+.table th, .table td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.list-group-item {
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+}
