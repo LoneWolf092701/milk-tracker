@@ -9,31 +9,48 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='custom.css') }}">
 </head>
 <body>
-    <div class="container mt-4">
-        <div class="card">
-            <div class="card-header">
-                <h2>Log Expense</h2>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">Milk Tracker</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/add_family">Add Family</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/log_distribution">Log Distribution</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/record_payment">Record Payment</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/log_expense">Log Expense</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/expenses">Expenses</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-3">
+        <div class="card shadow-sm">
+            <div class="card-header bg-info text-white">
+                <h2 class="mb-0">Log Expense</h2>
             </div>
             <div class="card-body">
                 <form method="POST">
                     {{ form.hidden_tag() }}
-                    <div class="mb-3">
+                    <div class="mb-2">
                         {{ form.date.label(class="form-label") }} {{ form.date(class="form-control") }}
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-2">
                         {{ form.category.label(class="form-label") }} {{ form.category(class="form-select") }}
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-2">
                         {{ form.amount.label(class="form-label") }} {{ form.amount(class="form-control") }}
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-2">
                         {{ form.description.label(class="form-label") }} {{ form.description(class="form-control") }}
                     </div>
                     {{ form.submit(class="btn btn-primary") }}
                 </form>
             </div>
         </div>
-        <a href="{{ url_for('expenses') }}" class="btn btn-secondary mt-3">Back to Expenses</a>
+        <a href="{{ url_for('expenses') }}" class="btn btn-secondary mt-2">Back to Expenses</a>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ url_for('static', filename='custom.js') }}"></script>

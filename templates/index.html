@@ -9,14 +9,14 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='custom.css') }}">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
             <a class="navbar-brand" href="/">Milk Tracker</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="/add_family">Add Family</a></li>
                     <li class="nav-item"><a class="nav-link" href="/log_distribution">Log Distribution</a></li>
                     <li class="nav-item"><a class="nav-link" href="/record_payment">Record Payment</a></li>
@@ -26,13 +26,56 @@
             </div>
         </div>
     </nav>
-    <div class="container mt-4">
-        <h1>Milk Distribution Tracker</h1>
-        <h2>Families</h2>
+    <div class="container mt-3">
+        <h1 class="text-center mb-3">Milk Distribution Tracker</h1>
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <div class="card text-center bg-light">
+                    <div class="card-body">
+                        <h5 class="card-title">Families</h5>
+                        <p class="card-text display-6">{{ num_families }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center bg-light">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Distributed</h5>
+                        <p class="card-text display-6">{{ total_distributed }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center bg-light">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Payments</h5>
+                        <p class="card-text display-6">{{ total_payments }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center bg-light">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Expenses</h5>
+                        <p class="card-text display-6">{{ total_expenses }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 mt-3">
+                <div class="card text-center bg-success text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">Profit</h5>
+                        <p class="card-text display-4">{{ profit }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h2 class="mb-2">Families</h2>
         <ul class="list-group">
             {% for family in families %}
-            <li class="list-group-item">
-                {{ family.name }} (ID: {{ family.id }}) - <a href="{{ url_for('view_family', family_id=family.id) }}">View Details</a>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ family.name }} (ID: {{ family.id }})
+                <a href="{{ url_for('view_family', family_id=family.id) }}" class="btn btn-sm btn-outline-primary">View Details</a>
             </li>
             {% endfor %}
         </ul>

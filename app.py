@@ -1,3 +1,4 @@
+# app.py
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
@@ -5,7 +6,7 @@ from wtforms import StringField, FloatField, DateField, SubmitField, SelectField
 from wtforms.validators import DataRequired
 from datetime import datetime
 import os
-from sqlalchemy import create_engine, inspect  # Added for DB check
+from sqlalchemy import create_engine, inspect, func  # Added func for sums
 import logging  # For debug logs
 
 app = Flask(__name__)
@@ -89,7 +90,12 @@ class ExpenseForm(FlaskForm):
 @app.route('/')
 def index():
     families = Family.query.all()
-    return render_template('index.html', families=families)
+    num_families = Family.query.count()
+    total_distributed = db.session.query(func.sum(Distribution.amount)).scalar() or 0
+    total_payments = db.session.query(func.sum(Payment.amount_paid)).scalar() or 0
+    total_expenses = db.session.query(func.sum(Expense.amount)).scalar() or 0
+    profit = total_payments - total_expenses
+    return render_template('index.html', families=families, num_families=num_families, total_distributed=total_distributed, total_payments=total_payments, total_expenses=total_expenses, profit=profit)
 
 @app.route('/add_family', methods=['GET', 'POST'])
 def add_family():
@@ -135,15 +141,15 @@ def log_expense():
 
 @app.route('/expenses')
 def expenses():
-    expenses = Expense.query.all()
+    expenses = Expense.query.order_by(Expense.date.desc()).all()
     total_expenses = sum(e.amount for e in expenses)
     return render_template('expenses.html', expenses=expenses, total_expenses=total_expenses)
 
 @app.route('/view_family/<int:family_id>')
 def view_family(family_id):
     family = Family.query.get_or_404(family_id)
-    distributions = Distribution.query.filter_by(family_id=family_id).all()
-    payments = Payment.query.filter_by(family_id=family_id).all()
+    distributions = Distribution.query.filter_by(family_id=family_id).order_by(Distribution.date.desc()).all()
+    payments = Payment.query.filter_by(family_id=family_id).order_by(Payment.date.desc()).all()
     total_amount = sum(d.amount for d in distributions)
     total_paid = sum(p.amount_paid for p in payments)
     balance = total_amount - total_paid
