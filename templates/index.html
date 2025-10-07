@@ -26,51 +26,51 @@
             </div>
         </div>
     </nav>
-    <div class="container mt-3">
-        <h1 class="text-center mb-3">Milk Distribution Tracker</h1>
-        <div class="row mb-3">
+    <div class="container mt-2">
+        <h1 class="text-center mb-2">Milk Distribution Tracker</h1>
+        <div class="row mb-2">
             <div class="col-md-3">
                 <div class="card text-center bg-light">
-                    <div class="card-body">
-                        <h5 class="card-title">Families</h5>
+                    <div class="card-body py-2">
+                        <h5 class="card-title mb-1">Families</h5>
                         <p class="card-text display-6">{{ num_families }}</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card text-center bg-light">
-                    <div class="card-body">
-                        <h5 class="card-title">Total Distributed</h5>
+                    <div class="card-body py-2">
+                        <h5 class="card-title mb-1">Total Distributed</h5>
                         <p class="card-text display-6">{{ total_distributed }}</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card text-center bg-light">
-                    <div class="card-body">
-                        <h5 class="card-title">Total Payments</h5>
+                    <div class="card-body py-2">
+                        <h5 class="card-title mb-1">Total Payments</h5>
                         <p class="card-text display-6">{{ total_payments }}</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card text-center bg-light">
-                    <div class="card-body">
-                        <h5 class="card-title">Total Expenses</h5>
+                    <div class="card-body py-2">
+                        <h5 class="card-title mb-1">Total Expenses</h5>
                         <p class="card-text display-6">{{ total_expenses }}</p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 mt-3">
+            <div class="col-md-12 mt-2">
                 <div class="card text-center bg-success text-white">
-                    <div class="card-body">
-                        <h5 class="card-title">Profit</h5>
+                    <div class="card-body py-2">
+                        <h5 class="card-title mb-1">Profit</h5>
                         <p class="card-text display-4">{{ profit }}</p>
                     </div>
                 </div>
             </div>
         </div>
-        <h2 class="mb-2">Families</h2>
+        <h2 class="mb-1">Families</h2>
         <ul class="list-group">
             {% for family in families %}
             <li class="list-group-item d-flex justify-content-between align-items-center">

@@ -50,15 +50,18 @@ class Expense(db.Model):
     amount = db.Column(db.Float, nullable=False)
     description = db.Column(db.String(200))
 
-# Initialize database tables if they don't exist (moved after models)
+# Initialize database tables if they don't exist
 engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
 inspector = inspect(engine)
-if not inspector.has_table('family'):
+existing_tables = inspector.get_table_names()
+required_tables = {'family', 'distribution', 'payment', 'expense'}
+
+if not all(table in existing_tables for table in required_tables):
     with app.app_context():
         db.create_all()
-    app.logger.info("Database tables created.")
+    app.logger.info("Created missing database tables.")
 else:
-    app.logger.info("Database tables already exist.")
+    app.logger.info("All database tables already exist.")
 
 # Forms
 class FamilyForm(FlaskForm):
