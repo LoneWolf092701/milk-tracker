@@ -1,0 +1,96 @@
+<!-- cows.html -->
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cows</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='custom.css') }}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img src="https://img.freepik.com/premium-vector/cow-milk-illustration-silhouette-logo_779267-1635.jpg?w=360" alt="Logo" class="me-1" height="30">
+                Milk Tracker
+            </a>
+            <button class="navbar-toggler me-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <button id="theme-toggle" class="btn btn-sm btn-outline-light"><i class="bi bi-sun-fill"></i></button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/add_family">Add Family</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/log_distribution">Log Distribution</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/record_payment">Record Payment</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/log_expense">Log Expense</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/expenses">Expenses</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/add_cow">Add Cow</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/log_milk">Log Milk</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/log_feed">Log Feed</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/cows">Cows</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-2">
+        <h1 class="text-center mb-2">Cow Management</h1>
+        <div class="accordion" id="accordionCows">
+            {% for cow in cows %}
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ cow.id }}" aria-expanded="false" aria-controls="collapse{{ cow.id }}">
+                        {{ cow.name }} (ID: {{ cow.id }}, Age: {{ cow.age or 'N/A' }})
+                    </button>
+                </h2>
+                <div id="collapse{{ cow.id }}" class="accordion-collapse collapse" data-bs-parent="#accordionCows">
+                    <div class="accordion-body">
+                        <h3>Milk Productions</h3>
+                        <table class="table table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Liters</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for milk in cow.milks %}
+                                <tr>
+                                    <td>{{ milk.date }}</td>
+                                    <td>{{ milk.liters }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <h3>Feeds</h3>
+                        <table class="table table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for feed in cow.feeds %}
+                                <tr>
+                                    <td>{{ feed.date }}</td>
+                                    <td>{{ feed.type }}</td>
+                                    <td>{{ feed.amount }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary mt-2">Back to Home</a>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='custom.js') }}"></script>
+</body>
+</html>

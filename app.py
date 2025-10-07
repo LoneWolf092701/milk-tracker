@@ -2,7 +2,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
-from wtforms import StringField, FloatField, DateField, SubmitField, SelectField
+from wtforms import StringField, FloatField, DateField, SubmitField, SelectField, IntegerField
 from wtforms.validators import DataRequired
 from datetime import datetime
 import os
@@ -50,11 +50,31 @@ class Expense(db.Model):
     amount = db.Column(db.Float, nullable=False)
     description = db.Column(db.String(200))
 
+class Cow(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    age = db.Column(db.Integer)
+    milks = db.relationship('MilkProduction', backref='cow', lazy=True)
+    feeds = db.relationship('Feed', backref='cow', lazy=True)
+
+class MilkProduction(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    cow_id = db.Column(db.Integer, db.ForeignKey('cow.id'), nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    liters = db.Column(db.Float, nullable=False)
+
+class Feed(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    cow_id = db.Column(db.Integer, db.ForeignKey('cow.id'), nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    type = db.Column(db.String(50))
+
 # Initialize database tables if they don't exist
 engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
 inspector = inspect(engine)
 existing_tables = inspector.get_table_names()
-required_tables = {'family', 'distribution', 'payment', 'expense'}
+required_tables = {'family', 'distribution', 'payment', 'expense', 'cow', 'milk_production', 'feed'}
 
 if not all(table in existing_tables for table in required_tables):
     with app.app_context():
@@ -89,6 +109,24 @@ class ExpenseForm(FlaskForm):
     description = StringField('Description')
     submit = SubmitField('Log Expense')
 
+class CowForm(FlaskForm):
+    name = StringField('Cow Name', validators=[DataRequired()])
+    age = IntegerField('Age')
+    submit = SubmitField('Add Cow')
+
+class MilkForm(FlaskForm):
+    cow_id = StringField('Cow ID', validators=[DataRequired()])
+    date = DateField('Date', validators=[DataRequired()])
+    liters = FloatField('Liters', validators=[DataRequired()])
+    submit = SubmitField('Log Milk')
+
+class FeedForm(FlaskForm):
+    cow_id = StringField('Cow ID', validators=[DataRequired()])
+    date = DateField('Date', validators=[DataRequired()])
+    amount = FloatField('Amount', validators=[DataRequired()])
+    type = SelectField('Type', choices=[('Mass', 'Mass'), ('Other Feeds', 'Other Feeds'), ('Medical', 'Medical'), ('Other', 'Other')], validators=[DataRequired()])
+    submit = SubmitField('Log Feed')
+
 # Routes
 @app.route('/')
 def index():
@@ -97,8 +135,9 @@ def index():
     total_distributed = db.session.query(func.sum(Distribution.amount)).scalar() or 0
     total_payments = db.session.query(func.sum(Payment.amount_paid)).scalar() or 0
     total_expenses = db.session.query(func.sum(Expense.amount)).scalar() or 0
+    total_milk = db.session.query(func.sum(MilkProduction.liters)).scalar() or 0
     profit = total_payments - total_expenses
-    return render_template('index.html', families=families, num_families=num_families, total_distributed=total_distributed, total_payments=total_payments, total_expenses=total_expenses, profit=profit)
+    return render_template('index.html', families=families, num_families=num_families, total_distributed=total_distributed, total_payments=total_payments, total_expenses=total_expenses, profit=profit, total_milk=total_milk)
 
 @app.route('/add_family', methods=['GET', 'POST'])
 def add_family():
@@ -157,6 +196,41 @@ def view_family(family_id):
     total_paid = sum(p.amount_paid for p in payments)
     balance = total_amount - total_paid
     return render_template('view_family.html', family=family, distributions=distributions, payments=payments, balance=balance)
+
+@app.route('/add_cow', methods=['GET', 'POST'])
+def add_cow():
+    form = CowForm()
+    if form.validate_on_submit():
+        cow = Cow(name=form.name.data, age=form.age.data)
+        db.session.add(cow)
+        db.session.commit()
+        return redirect(url_for('cows'))
+    return render_template('add_cow.html', form=form)
+
+@app.route('/log_milk', methods=['GET', 'POST'])
+def log_milk():
+    form = MilkForm()
+    if form.validate_on_submit():
+        milk = MilkProduction(cow_id=int(form.cow_id.data), date=form.date.data, liters=form.liters.data)
+        db.session.add(milk)
+        db.session.commit()
+        return redirect(url_for('cows'))
+    return render_template('log_milk.html', form=form)
+
+@app.route('/log_feed', methods=['GET', 'POST'])
+def log_feed():
+    form = FeedForm()
+    if form.validate_on_submit():
+        feed = Feed(cow_id=int(form.cow_id.data), date=form.date.data, amount=form.amount.data, type=form.type.data)
+        db.session.add(feed)
+        db.session.commit()
+        return redirect(url_for('cows'))
+    return render_template('log_feed.html', form=form)
+
+@app.route('/cows')
+def cows():
+    cows = Cow.query.all()
+    return render_template('cows.html', cows=cows)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
