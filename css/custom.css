@@ -114,7 +114,7 @@ h1, h2, h3 {
     margin-bottom: 0;
 }
 
-@media (max-width: 576px) {
+@media (max-width: 767px) {
     .container {
         padding: 0.25rem;
     }
@@ -131,7 +131,10 @@ h1, h2, h3 {
         padding: 0.5rem;
     }
     .navbar-toggler {
-        order: 1;
+        display: none;
+    }
+    #navbarNav {
+        display: none;
     }
     #theme-toggle {
         order: 2;

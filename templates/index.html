@@ -1,102 +1,174 @@
-<!-- index.html -->
+<DOCUMENT filename="index.html">
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Milk Distribution Tracker</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <title>Milk Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='custom.css') }}">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-            <a class="navbar-brand" href="/">
-                <img src="https://img.freepik.com/premium-vector/cow-milk-illustration-silhouette-logo_779267-1635.jpg?w=360" alt="Logo" class="me-1" height="30">
-                Milk Tracker
+    <header>
+        <nav class="navbar navbar-expand-md bg-light">
+            <div class="container">
+                <a class="navbar-brand" href="/">Milk Tracker</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav d-none d-md-flex">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/add_family">Add Family</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/log_distribution">Log Distribution</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/record_payment">Record Payment</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/log_expense">Log Expense</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/expenses">Expenses</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/add_cow">Add Cow</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/log_milk">Log Milk</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/log_feed">Log Feed</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/cows">Cows</a>
+                        </li>
+                    </ul>
+                </div>
+                <button id="theme-toggle" class="btn btn-link ms-auto">
+                    <i class="bi bi-moon-stars-fill"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mt-4">
+        <h1 class="text-center mb-4">Milk Distribution Tracker</h1>
+
+        <div class="row row-cols-1 row-cols-md-3 g-3 mb-4">
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Families</h5>
+                        <p class="display-6">{{ num_families }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Milk Produced</h5>
+                        <p class="display-6">{{ total_milk }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Distributed</h5>
+                        <p class="display-6">{{ total_distributed }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Payments</h5>
+                        <p class="display-6">{{ total_payments }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Expenses</h5>
+                        <p class="display-6">{{ total_expenses }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Profit</h5>
+                        <p class="display-6">{{ profit }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2>Families</h2>
+        <ul class="list-group">
+            {% for family in families %}
+            <li class="list-group-item">
+                {{ family.name }} (ID: {{ family.id }})
+                <a href="{{ url_for('view_family', family_id=family.id) }}" class="btn btn-sm btn-primary float-end">View Details</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </main>
+
+    <nav class="navbar fixed-bottom bg-light d-block d-md-none">
+        <div class="container-fluid justify-content-around">
+            <a class="nav-link text-center" href="/add_family">
+                <i class="bi bi-person-plus"></i><br>Add Family
             </a>
-            <button class="navbar-toggler me-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <button id="theme-toggle" class="btn btn-sm btn-outline-light"><i class="bi bi-sun-fill"></i></button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="/add_family">Add Family</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/log_distribution">Log Distribution</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/record_payment">Record Payment</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/log_expense">Log Expense</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/expenses">Expenses</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/add_cow">Add Cow</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/log_milk">Log Milk</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/log_feed">Log Feed</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/cows">Cows</a></li>
+            <div class="dropup">
+                <a class="nav-link text-center dropdown-toggle" href="#" id="distDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-currency-exchange"></i><br>Distribution & Payment
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="distDropdown">
+                    <li><a class="dropdown-item" href="/log_distribution">Log Distribution</a></li>
+                    <li><a class="dropdown-item" href="/record_payment">Log Payment</a></li>
+                </ul>
+            </div>
+            <div class="dropup">
+                <a class="nav-link text-center dropdown-toggle" href="#" id="expDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-wallet"></i><br>Expenses
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="expDropdown">
+                    <li><a class="dropdown-item" href="/log_expense">Log Expense</a></li>
+                    <li><a class="dropdown-item" href="/expenses">Expenses</a></li>
+                </ul>
+            </div>
+            <div class="dropup">
+                <a class="nav-link text-center dropdown-toggle" href="#" id="cowDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-grid"></i><br>Cows
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="cowDropdown">
+                    <li><a class="dropdown-item" href="/add_cow">Add Cow</a></li>
+                    <li><a class="dropdown-item" href="/cows">Cows</a></li>
+                </ul>
+            </div>
+            <div class="dropup">
+                <a class="nav-link text-center dropdown-toggle" href="#" id="milkDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-droplet"></i><br>Milk & Feed
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="milkDropdown">
+                    <li><a class="dropdown-item" href="/log_milk">Log Milk</a></li>
+                    <li><a class="dropdown-item" href="/log_feed">Log Feed</a></li>
                 </ul>
             </div>
         </div>
     </nav>
-    <div class="container mt-2">
-        <h1 class="text-center mb-2">Milk Distribution Tracker</h1>
-        <div class="row mb-2">
-            <div class="col-md-3">
-                <div class="card text-center bg-body">
-                    <div class="card-body py-2">
-                        <h5 class="card-title mb-1">Families</h5>
-                        <p class="card-text display-6">{{ num_families }}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card text-center bg-body">
-                    <div class="card-body py-2">
-                        <h5 class="card-title mb-1">Total Milk Produced</h5>
-                        <p class="card-text display-6">{{ total_milk }}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card text-center bg-body">
-                    <div class="card-body py-2">
-                        <h5 class="card-title mb-1">Total Distributed</h5>
-                        <p class="card-text display-6">{{ total_distributed }}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card text-center bg-body">
-                    <div class="card-body py-2">
-                        <h5 class="card-title mb-1">Total Payments</h5>
-                        <p class="card-text display-6">{{ total_payments }}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 mt-2">
-                <div class="card text-center bg-body">
-                    <div class="card-body py-2">
-                        <h5 class="card-title mb-1">Total Expenses</h5>
-                        <p class="card-text display-6">{{ total_expenses }}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-9 mt-2">
-                <div class="card text-center bg-success text-white">
-                    <div class="card-body py-2">
-                        <h5 class="card-title mb-1">Profit</h5>
-                        <p class="card-text display-4">{{ profit }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <h2 class="mb-1">Families</h2>
-        <ul class="list-group">
-            {% for family in families %}
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                {{ family.name }} (ID: {{ family.id }})
-                <a href="{{ url_for('view_family', family_id=family.id) }}" class="btn btn-sm btn-outline-primary">View Details</a>
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ url_for('static', filename='custom.js') }}"></script>
 </body>
