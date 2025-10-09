@@ -1,74 +1,74 @@
-<DOCUMENT filename="cows.html">
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cows - Milk Tracker</title>
+    <title>Milk Tracker</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='custom.css') }}">
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-md bg-light">
-            <div class="container">
-                <a class="navbar-brand" href="/">Milk Tracker</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav d-none d-md-flex">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/add_family">Add Family</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/log_distribution">Log Distribution</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/record_payment">Record Payment</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/log_expense">Log Expense</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/expenses">Expenses</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/add_cow">Add Cow</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/log_milk">Log Milk</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/log_feed">Log Feed</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/cows">Cows</a>
-                        </li>
-                    </ul>
-                </div>
-                <button id="theme-toggle" class="btn btn-link ms-auto">
-                    <i class="bi bi-moon-stars-fill"></i>
-                </button>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url_for('index') }}">Milk Tracker</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('add_family') }}">Add Family</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('log_distribution') }}">Log Distribution</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('record_payment') }}">Record Payment</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('log_expense') }}">Log Expense</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('expenses') }}">Expenses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('add_cow') }}">Add Cow</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('log_milk') }}">Log Milk</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('log_feed') }}">Log Feed</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('cows') }}">Cows</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('meal_plan') }}">Meal Plan</a>
+                    </li>
+                </ul>
             </div>
-        </nav>
-    </header>
+            <button id="theme-toggle" class="btn btn-outline-secondary ms-auto">
+                <i class="bi bi-moon-stars-fill"></i>
+            </button>
+        </div>
+    </nav>
 
-    <main class="container mt-4">
-        <h1 class="text-center mb-4">Cow Management</h1>
+    <div class="container mt-4">
+        <h1>Cow Management</h1>
         {% for cow in cows %}
-        <div class="accordion mb-3" id="cowAccordion{{ cow.id }}">
+        <div class="accordion mb-3" id="accordionCow{{ cow.id }}">
             <div class="accordion-item">
-                <h2 class="accordion-header" id="heading{{ cow.id }}">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ cow.id }}" aria-expanded="false" aria-controls="collapse{{ cow.id }}">
+                <h2 class="accordion-header" id="headingCow{{ cow.id }}">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCow{{ cow.id }}" aria-expanded="true" aria-controls="collapseCow{{ cow.id }}">
                         {{ cow.name }} (ID: {{ cow.id }}, Age: {{ cow.age or 'N/A' }})
                     </button>
                 </h2>
-                <div id="collapse{{ cow.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ cow.id }}">
+                <div id="collapseCow{{ cow.id }}" class="accordion-collapse collapse show" aria-labelledby="headingCow{{ cow.id }}">
                     <div class="accordion-body">
-                        <h5>Milk Productions</h5>
-                        <table class="table table-sm">
+                        <h3>Milk Productions</h3>
+                        <table class="table table-striped">
                             <thead>
                                 <tr>
                                     <th>Date</th>
@@ -84,8 +84,9 @@
                                 {% endfor %}
                             </tbody>
                         </table>
-                        <h5>Feeds</h5>
-                        <table class="table table-sm">
+
+                        <h3>Feeds</h3>
+                        <table class="table table-striped">
                             <thead>
                                 <tr>
                                     <th>Date</th>
@@ -108,55 +109,46 @@
             </div>
         </div>
         {% endfor %}
-        <a href="/" class="btn btn-secondary">Back to Home</a>
-    </main>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">Back to Home</a>
+    </div>
 
-    <nav class="navbar fixed-bottom bg-light d-block d-md-none">
-        <div class="container-fluid justify-content-around">
-            <a class="nav-link text-center" href="/add_family">
-                <i class="bi bi-person-plus"></i><br>Add Family
-            </a>
-            <div class="dropup">
-                <a class="nav-link text-center dropdown-toggle" href="#" id="distDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-currency-exchange"></i><br>Distribution & Payment
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="distDropdown">
-                    <li><a class="dropdown-item" href="/log_distribution">Log Distribution</a></li>
-                    <li><a class="dropdown-item" href="/record_payment">Log Payment</a></li>
-                </ul>
-            </div>
-            <div class="dropup">
-                <a class="nav-link text-center dropdown-toggle" href="#" id="expDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-wallet"></i><br>Expenses
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="expDropdown">
-                    <li><a class="dropdown-item" href="/log_expense">Log Expense</a></li>
-                    <li><a class="dropdown-item" href="/expenses">Expenses</a></li>
-                </ul>
-            </div>
-            <div class="dropup">
-                <a class="nav-link text-center dropdown-toggle" href="#" id="cowDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-grid"></i><br>Cows
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="cowDropdown">
-                    <li><a class="dropdown-item" href="/add_cow">Add Cow</a></li>
-                    <li><a class="dropdown-item" href="/cows">Cows</a></li>
-                </ul>
-            </div>
-            <div class="dropup">
-                <a class="nav-link text-center dropdown-toggle" href="#" id="milkDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-droplet"></i><br>Milk & Feed
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="milkDropdown">
-                    <li><a class="dropdown-item" href="/log_milk">Log Milk</a></li>
-                    <li><a class="dropdown-item" href="/log_feed">Log Feed</a></li>
-                </ul>
-            </div>
-        </div>
+    <!-- Mobile Bottom Nav Bar with Icons Only -->
+    <nav class="navbar fixed-bottom bg-light d-lg-none">
+        <ul class="navbar-nav d-flex flex-row w-100 justify-content-around">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('add_family') }}"><i class="bi bi-person-plus-fill"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('log_distribution') }}"><i class="bi bi-box-seam"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('record_payment') }}"><i class="bi bi-cash-stack"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('log_expense') }}"><i class="bi bi-journal-text"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('expenses') }}"><i class="bi bi-bar-chart-line"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('add_cow') }}"><i class="bi bi-plus-circle-fill"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('log_milk') }}"><i class="bi bi-droplet-fill"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('log_feed') }}"><i class="bi bi-flower1"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('cows') }}"><i class="bi bi-grid"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('meal_plan') }}"><i class="bi bi-apple"></i></a>
+            </li>
+        </ul>
     </nav>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ url_for('static', filename='custom.js') }}"></script>
 </body>
 </html>
-</DOCUMENT>

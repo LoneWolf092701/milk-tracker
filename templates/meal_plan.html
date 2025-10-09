@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milk Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='custom.css') }}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url_for('index') }}">Milk Tracker</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('add_family') }}">Add Family</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('log_distribution') }}">Log Distribution</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('record_payment') }}">Record Payment</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('log_expense') }}">Log Expense</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('expenses') }}">Expenses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('add_cow') }}">Add Cow</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('log_milk') }}">Log Milk</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('log_feed') }}">Log Feed</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('cows') }}">Cows</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('meal_plan') }}">Meal Plan</a>
+                    </li>
+                </ul>
+            </div>
+            <button id="theme-toggle" class="btn btn-outline-secondary ms-auto">
+                <i class="bi bi-moon-stars-fill"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h1>Comprehensive Dairy Cow Feeding Plan</h1>
+        <h2>For High Milk Production (Sri Lanka Context)</h2>
+
+        <h3>Daily Feeding Schedule (For 400-450kg cow producing 10-15L milk/day)</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Feed Type</th>
+                    <th>Quantity</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>6:00 AM</td>
+                    <td>Green Fodder</td>
+                    <td>15-20 kg</td>
+                    <td>CO3 grass, Napier grass, or Brachiaria. Fresh cut, clean</td>
+                </tr>
+                <tr>
+                    <td>6:30 AM</td>
+                    <td>Concentrate Mix</td>
+                    <td>2-3 kg</td>
+                    <td>See recipe below. Feed AFTER green fodder</td>
+                </tr>
+                <tr>
+                    <td>7:00 AM</td>
+                    <td>Clean Water</td>
+                    <td>Ad libitum</td>
+                    <td>Always available, change 2x daily</td>
+                </tr>
+                <tr>
+                    <td>10:00 AM</td>
+                    <td>Dry Fodder</td>
+                    <td>3-4 kg</td>
+                    <td>Rice straw or hay. Soak in water for 30 min before feeding</td>
+                </tr>
+                <tr>
+                    <td>12:00 PM</td>
+                    <td>Processed Veg Leftovers</td>
+                    <td>2-3 kg</td>
+                    <td>ONLY if heat-treated, mixed with dry fodder</td>
+                </tr>
+                <tr>
+                    <td>2:00 PM</td>
+                    <td>Green Fodder</td>
+                    <td>15-20 kg</td>
+                    <td>Fresh cut, different variety if possible</td>
+                </tr>
+                <tr>
+                    <td>3:00 PM</td>
+                    <td>Mineral Mix</td>
+                    <td>50 g</td>
+                    <td>Mixed with concentrate or separate</td>
+                </tr>
+                <tr>
+                    <td>5:00 PM</td>
+                    <td>Concentrate Mix</td>
+                    <td>2-3 kg</td>
+                    <td>Feed AFTER green fodder</td>
+                </tr>
+                <tr>
+                    <td>6:00 PM</td>
+                    <td>Dry Fodder</td>
+                    <td>3-4 kg</td>
+                    <td>Rice straw, can add molasses (100g) for palatability</td>
+                </tr>
+                <tr>
+                    <td>8:00 PM</td>
+                    <td>Green Fodder</td>
+                    <td>5-10 kg</td>
+                    <td>Light feeding before night</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Total Daily Feed Quantities</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Feed Category</th>
+                    <th>Daily Amount</th>
+                    <th>% of Total Diet</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Green Fodder</td>
+                    <td>35-50 kg</td>
+                    <td>60-65%</td>
+                </tr>
+                <tr>
+                    <td>Dry Fodder</td>
+                    <td>6-8 kg</td>
+                    <td>15-20%</td>
+                </tr>
+                <tr>
+                    <td>Concentrate</td>
+                    <td>4-6 kg</td>
+                    <td>15-20%</td>
+                </tr>
+                <tr>
+                    <td>Vegetable Leftovers</td>
+                    <td>0-3 kg</td>
+                    <td>0-10% (optional)</td>
+                </tr>
+                <tr>
+                    <td>Mineral Mix</td>
+                    <td>50 g</td>
+                    <td>As needed</td>
+                </tr>
+                <tr>
+                    <td>Salt</td>
+                    <td>30-50 g</td>
+                    <td>Mixed in feed</td>
+                </tr>
+                <tr>
+                    <td>Water</td>
+                    <td>60-80 liters</td>
+                    <td>Ad libitum</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Concentrate Mix Recipe (Make 100kg batch)</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Ingredient</th>
+                    <th>Quantity (kg)</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Maize/Corn</td>
+                    <td>30</td>
+                    <td>Energy source</td>
+                </tr>
+                <tr>
+                    <td>Rice bran</td>
+                    <td>20</td>
+                    <td>Energy + fiber</td>
+                </tr>
+                <tr>
+                    <td>Coconut poonac/cake</td>
+                    <td>20</td>
+                    <td>Protein (18-20%)</td>
+                </tr>
+                <tr>
+                    <td>Wheat bran</td>
+                    <td>15</td>
+                    <td>Fiber + energy</td>
+                </tr>
+                <tr>
+                    <td>Soybean meal</td>
+                    <td>10</td>
+                    <td>High protein</td>
+                </tr>
+                <tr>
+                    <td>Mineral mixture</td>
+                    <td>4</td>
+                    <td>Calcium, phosphorus</td>
+                </tr>
+                <tr>
+                    <td>Salt</td>
+                    <td>1</td>
+                    <td>Sodium, chloride</td>
+                </tr>
+            </tbody>
+        </table>
+        <p>How to mix: Thoroughly blend all ingredients. Store in dry, rodent-free container. Use within 1 month.</p>
+
+        <h3>Vegetable Leftover Processing & Safety</h3>
+        <p><strong>✅ Safe Processing Steps:</strong></p>
+        <ol>
+            <li><strong>Inspect & Sort</strong>
+                <ul>
+                    <li>Remove all moldy, rotten portions</li>
+                    <li>Discard fermented vegetables</li>
+                    <li>Remove plastic, paper, foreign objects</li>
+                </ul>
+            </li>
+            <li><strong>Heat Treatment (MANDATORY)</strong>
+                <ul>
+                    <li>Boil/steam at 70°C+ for 30 minutes</li>
+                    <li>Let cool completely before feeding</li>
+                    <li>This kills bacteria, parasites</li>
+                </ul>
+            </li>
+            <li><strong>Mixing</strong>
+                <ul>
+                    <li>Mix 1 part vegetables : 2 parts dry fodder</li>
+                    <li>Never feed vegetables alone</li>
+                    <li>Maximum 3 kg/day</li>
+                </ul>
+            </li>
+        </ol>
+        <p><strong>❌ Never Feed:</strong></p>
+        <ul>
+            <li>Spoiled/fermented vegetables</li>
+            <li>Onions (toxic to cattle)</li>
+            <li>Large amounts of raw potato</li>
+            <li>Oily, fried foods</li>
+            <li>Spicy food</li>
+            <li>Citrus in excess</li>
+            <li>Anything moldy</li>
+        </ul>
+
+        <h4>Weekly Processing Schedule:</h4>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Day</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Monday</td>
+                    <td>Collect vegetables, sort, remove waste</td>
+                </tr>
+                <tr>
+                    <td>Tuesday</td>
+                    <td>Heat-treat batch 1, cool, store</td>
+                </tr>
+                <tr>
+                    <td>Thursday</td>
+                    <td>Heat-treat batch 2, cool, store</td>
+                </tr>
+                <tr>
+                    <td>Saturday</td>
+                    <td>Heat-treat batch 3, cool, store</td>
+                </tr>
+            </tbody>
+        </table>
+        <p>Storage: Processed vegetables last 2-3 days in cool place. Use ice if available.</p>
+
+        <h3>Special Guidelines for Milk Production</h3>
+        <p>For 10-15 Liters/Day:</p>
+        <ul>
+            <li>Increase concentrate by 1 kg for every 2.5 liters above 10L</li>
+            <li>Feed concentrate in 2-3 portions (not all at once)</li>
+            <li>Ensure protein content is 16-18% of total diet</li>
+        </ul>
+        <p>Milking Time Feeding:</p>
+        <ul>
+            <li>Feed concentrate DURING milking</li>
+            <li>This creates positive association</li>
+            <li>Cow stays calm during milking</li>
+        </ul>
+
+        <h3>Recovery Phase (After Current Illness):</h3>
+        <p>Week 1-2:</p>
+        <ul>
+            <li>NO vegetable leftovers</li>
+            <li>Only green fodder, dry fodder, concentrate</li>
+            <li>Smaller portions, more frequent</li>
+        </ul>
+        <p>Week 3-4:</p>
+        <ul>
+            <li>Slowly introduce vegetables (500g, then 1kg, then 2kg)</li>
+            <li>Watch for any diarrhea</li>
+            <li>Stop immediately if problems occur</li>
+        </ul>
+
+        <h3>Green Fodder Options (Sri Lanka)</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Fodder Type</th>
+                    <th>Yield/Acre/Day</th>
+                    <th>Protein %</th>
+                    <th>Best For</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>CO3 Grass</td>
+                    <td>100-150 kg</td>
+                    <td>12-15%</td>
+                    <td>Year-round, high yielding</td>
+                </tr>
+                <tr>
+                    <td>Napier/Elephant Grass</td>
+                    <td>80-120 kg</td>
+                    <td>10-12%</td>
+                    <td>High biomass</td>
+                </tr>
+                <tr>
+                    <td>Brachiaria</td>
+                    <td>60-80 kg</td>
+                    <td>12-14%</td>
+                    <td>Drought tolerant</td>
+                </tr>
+                <tr>
+                    <td>Gliricidia (leaves)</td>
+                    <td>20-30 kg</td>
+                    <td>18-20%</td>
+                    <td>Protein supplement</td>
+                </tr>
+                <tr>
+                    <td>Maize (green)</td>
+                    <td>150-200 kg</td>
+                    <td>8-10%</td>
+                    <td>Energy rich</td>
+                </tr>
+            </tbody>
+        </table>
+        <p>Recommendation: Plant mixed fodder - 70% CO3 + 30% Gliricidia</p>
+
+        <h3>Mineral & Vitamin Supplementation</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Supplement</th>
+                    <th>Amount/Day</th>
+                    <th>When to Give</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Mineral Mix</td>
+                    <td>50 g</td>
+                    <td>Mixed with morning concentrate</td>
+                </tr>
+                <tr>
+                    <td>Vitamin AD3E</td>
+                    <td>5 ml</td>
+                    <td>2x weekly, oral or injection</td>
+                </tr>
+                <tr>
+                    <td>Calcium (if needed)</td>
+                    <td>50-100 g</td>
+                    <td>During late pregnancy/early lactation</td>
+                </tr>
+                <tr>
+                    <td>Chelated Minerals</td>
+                    <td>As per pack</td>
+                    <td>If milk production drops</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Water Requirements</h3>
+        <ul>
+            <li>Minimum: 60-80 liters/day</li>
+            <li>Lactating cow: Add 3-4 liters for every liter of milk</li>
+            <li>Hot weather: Increase by 20-30%</li>
+            <li>Change water 2-3 times daily</li>
+            <li>Clean water troughs daily</li>
+        </ul>
+
+        <h3>Signs of Good Nutrition</h3>
+        <p><strong>✅ Your cow is well-fed if:</strong></p>
+        <ul>
+            <li>Shiny coat</li>
+            <li>Firm, round dung (not too hard, not watery)</li>
+            <li>Active, alert behavior</li>
+            <li>Milk production steady or increasing</li>
+            <li>Body condition score 3-3.5 (out of 5)</li>
+        </ul>
+        <p><strong>❌ Warning signs:</strong></p>
+        <ul>
+            <li>Dull coat</li>
+            <li>Loose dung or constipation</li>
+            <li>Dropping milk production</li>
+            <li>Weight loss</li>
+            <li>Excessive hunger/restlessness</li>
+        </ul>
+
+        <h3>Cost Optimization Tips</h3>
+        <ol>
+            <li><strong>Grow Your Own Fodder</strong>
+                <ul>
+                    <li>1 acre CO3 grass = 20-25 cows</li>
+                    <li>Cut cost by 60-70%</li>
+                </ul>
+            </li>
+            <li><strong>Make Your Own Concentrate</strong>
+                <ul>
+                    <li>Cheaper than commercial feed</li>
+                    <li>Better quality control</li>
+                </ul>
+            </li>
+            <li><strong>Use Vegetable Waste Wisely</strong>
+                <ul>
+                    <li>Free feed source IF processed correctly</li>
+                    <li>Can replace 10-15% of feed cost</li>
+                </ul>
+            </li>
+            <li><strong>Seasonal Feeding</strong>
+                <ul>
+                    <li>Store hay during dry season</li>
+                    <li>Use silage for year-round availability</li>
+                </ul>
+            </li>
+        </ol>
+
+        <h3>Recovery Plan After Current Illness</h3>
+        <p>Days 1-3 (Immediate - With Vet Care):</p>
+        <ul>
+            <li>NO solid food initially</li>
+            <li>Warm rice kanji (gruel) - 5-10 liters</li>
+            <li>Fresh water constantly</li>
+            <li>Follow vet's medication</li>
+        </ul>
+        <p>Days 4-7:</p>
+        <ul>
+            <li>Small amounts tender green grass (5kg, 3x daily)</li>
+            <li>Well-soaked hay (2kg)</li>
+            <li>Very light concentrate (500g)</li>
+            <li>Curd/yogurt (1 liter) for gut health</li>
+        </ul>
+        <p>Days 8-14:</p>
+        <ul>
+            <li>Gradually increase to normal amounts</li>
+            <li>Monitor dung consistency</li>
+            <li>If diarrhea returns, reduce feed</li>
+        </ul>
+        <p>Week 3+:</p>
+        <ul>
+            <li>Return to full feeding schedule above</li>
+            <li>Can introduce vegetable leftovers (heat-treated only)</li>
+        </ul>
+
+        <h3>Emergency Contact</h3>
+        <ul>
+            <li>Department of Animal Production & Health: Regional office</li>
+            <li>Veterinary Surgeon: Keep number handy</li>
+            <li>Milk Collection Center: Can often connect to vet services</li>
+        </ul>
+
+        <h3>Important Notes</h3>
+        <p><strong>⚠️ NEVER:</strong></p>
+        <ul>
+            <li>Feed vegetables without heat treatment</li>
+            <li>Give all concentrate at once</li>
+            <li>Let cow drink immediately after concentrate</li>
+            <li>Use moldy feed of any kind</li>
+        </ul>
+        <p><strong>✅ ALWAYS:</strong></p>
+        <ul>
+            <li>Provide clean, fresh water</li>
+            <li>Feed at consistent times</li>
+            <li>Monitor dung and milk daily</li>
+            <li>Maintain clean feeding area</li>
+        </ul>
+
+        <a href="{{ url_for('cows') }}" class="btn btn-secondary mt-3">Back to Cows</a>
+    </div>
+
+    <!-- Mobile Bottom Nav Bar with Icons Only -->
+    <nav class="navbar fixed-bottom bg-light d-lg-none">
+        <ul class="navbar-nav d-flex flex-row w-100 justify-content-around">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('add_family') }}"><i class="bi bi-person-plus-fill"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('log_distribution') }}"><i class="bi bi-box-seam"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('record_payment') }}"><i class="bi bi-cash-stack"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('log_expense') }}"><i class="bi bi-journal-text"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('expenses') }}"><i class="bi bi-bar-chart-line"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('add_cow') }}"><i class="bi bi-plus-circle-fill"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('log_milk') }}"><i class="bi bi-droplet-fill"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('log_feed') }}"><i class="bi bi-flower1"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('cows') }}"><i class="bi bi-grid"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('meal_plan') }}"><i class="bi bi-apple"></i></a>
+            </li>
+        </ul>
+    </nav>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='custom.js') }}"></script>
+</body>
+</html>

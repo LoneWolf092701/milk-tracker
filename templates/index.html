@@ -1,114 +1,109 @@
-<DOCUMENT filename="index.html">
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Milk Tracker</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='custom.css') }}">
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-md bg-light">
-            <div class="container">
-                <a class="navbar-brand" href="/">Milk Tracker</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav d-none d-md-flex">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/add_family">Add Family</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/log_distribution">Log Distribution</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/record_payment">Record Payment</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/log_expense">Log Expense</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/expenses">Expenses</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/add_cow">Add Cow</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/log_milk">Log Milk</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/log_feed">Log Feed</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/cows">Cows</a>
-                        </li>
-                    </ul>
-                </div>
-                <button id="theme-toggle" class="btn btn-link ms-auto">
-                    <i class="bi bi-moon-stars-fill"></i>
-                </button>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url_for('index') }}">Milk Tracker</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('add_family') }}">Add Family</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('log_distribution') }}">Log Distribution</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('record_payment') }}">Record Payment</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('log_expense') }}">Log Expense</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('expenses') }}">Expenses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('add_cow') }}">Add Cow</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('log_milk') }}">Log Milk</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('log_feed') }}">Log Feed</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('cows') }}">Cows</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('meal_plan') }}">Meal Plan</a>
+                    </li>
+                </ul>
             </div>
-        </nav>
-    </header>
+            <button id="theme-toggle" class="btn btn-outline-secondary ms-auto">
+                <i class="bi bi-moon-stars-fill"></i>
+            </button>
+        </div>
+    </nav>
 
-    <main class="container mt-4">
-        <h1 class="text-center mb-4">Milk Distribution Tracker</h1>
+    <div class="container mt-4">
+        <h1>Milk Distribution Tracker</h1>
 
-        <div class="row row-cols-1 row-cols-md-3 g-3 mb-4">
-            <div class="col">
+        <div class="row mt-4">
+            <div class="col-md-4 mb-3">
                 <div class="card text-center">
                     <div class="card-body">
                         <h5 class="card-title">Families</h5>
-                        <p class="display-6">{{ num_families }}</p>
+                        <p class="display-4">{{ num_families }}</p>
                     </div>
                 </div>
             </div>
-
-            <div class="col">
+            <div class="col-md-4 mb-3">
                 <div class="card text-center">
                     <div class="card-body">
                         <h5 class="card-title">Total Milk Produced</h5>
-                        <p class="display-6">{{ total_milk }}</p>
+                        <p class="display-4">{{ total_milk }}</p>
                     </div>
                 </div>
             </div>
-
-            <div class="col">
+            <div class="col-md-4 mb-3">
                 <div class="card text-center">
                     <div class="card-body">
                         <h5 class="card-title">Total Distributed</h5>
-                        <p class="display-6">{{ total_distributed }}</p>
+                        <p class="display-4">{{ total_distributed }}</p>
                     </div>
                 </div>
             </div>
-
-            <div class="col">
+            <div class="col-md-4 mb-3">
                 <div class="card text-center">
                     <div class="card-body">
                         <h5 class="card-title">Total Payments</h5>
-                        <p class="display-6">{{ total_payments }}</p>
+                        <p class="display-4">{{ total_payments }}</p>
                     </div>
                 </div>
             </div>
-
-            <div class="col">
+            <div class="col-md-4 mb-3">
                 <div class="card text-center">
                     <div class="card-body">
                         <h5 class="card-title">Total Expenses</h5>
-                        <p class="display-6">{{ total_expenses }}</p>
+                        <p class="display-4">{{ total_expenses }}</p>
                     </div>
                 </div>
             </div>
-
-            <div class="col">
+            <div class="col-md-4 mb-3">
                 <div class="card text-center">
                     <div class="card-body">
                         <h5 class="card-title">Profit</h5>
-                        <p class="display-6">{{ profit }}</p>
+                        <p class="display-4">{{ profit }}</p>
                     </div>
                 </div>
             </div>
@@ -117,56 +112,48 @@
         <h2>Families</h2>
         <ul class="list-group">
             {% for family in families %}
-            <li class="list-group-item">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
                 {{ family.name }} (ID: {{ family.id }})
-                <a href="{{ url_for('view_family', family_id=family.id) }}" class="btn btn-sm btn-primary float-end">View Details</a>
+                <a href="{{ url_for('view_family', family_id=family.id) }}" class="btn btn-primary btn-sm">View Details</a>
             </li>
             {% endfor %}
         </ul>
-    </main>
+    </div>
 
-    <nav class="navbar fixed-bottom bg-light d-block d-md-none">
-        <div class="container-fluid justify-content-around">
-            <a class="nav-link text-center" href="/add_family">
-                <i class="bi bi-person-plus"></i><br>Add Family
-            </a>
-            <div class="dropup">
-                <a class="nav-link text-center dropdown-toggle" href="#" id="distDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-currency-exchange"></i><br>Distribution & Payment
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="distDropdown">
-                    <li><a class="dropdown-item" href="/log_distribution">Log Distribution</a></li>
-                    <li><a class="dropdown-item" href="/record_payment">Log Payment</a></li>
-                </ul>
-            </div>
-            <div class="dropup">
-                <a class="nav-link text-center dropdown-toggle" href="#" id="expDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-wallet"></i><br>Expenses
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="expDropdown">
-                    <li><a class="dropdown-item" href="/log_expense">Log Expense</a></li>
-                    <li><a class="dropdown-item" href="/expenses">Expenses</a></li>
-                </ul>
-            </div>
-            <div class="dropup">
-                <a class="nav-link text-center dropdown-toggle" href="#" id="cowDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-grid"></i><br>Cows
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="cowDropdown">
-                    <li><a class="dropdown-item" href="/add_cow">Add Cow</a></li>
-                    <li><a class="dropdown-item" href="/cows">Cows</a></li>
-                </ul>
-            </div>
-            <div class="dropup">
-                <a class="nav-link text-center dropdown-toggle" href="#" id="milkDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-droplet"></i><br>Milk & Feed
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="milkDropdown">
-                    <li><a class="dropdown-item" href="/log_milk">Log Milk</a></li>
-                    <li><a class="dropdown-item" href="/log_feed">Log Feed</a></li>
-                </ul>
-            </div>
-        </div>
+    <!-- Mobile Bottom Nav Bar with Icons Only -->
+    <nav class="navbar fixed-bottom bg-light d-lg-none">
+        <ul class="navbar-nav d-flex flex-row w-100 justify-content-around">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('add_family') }}"><i class="bi bi-person-plus-fill"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('log_distribution') }}"><i class="bi bi-box-seam"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('record_payment') }}"><i class="bi bi-cash-stack"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('log_expense') }}"><i class="bi bi-journal-text"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('expenses') }}"><i class="bi bi-bar-chart-line"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('add_cow') }}"><i class="bi bi-plus-circle-fill"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('log_milk') }}"><i class="bi bi-droplet-fill"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('log_feed') }}"><i class="bi bi-flower1"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('cows') }}"><i class="bi bi-grid"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('meal_plan') }}"><i class="bi bi-apple"></i></a>
+            </li>
+        </ul>
     </nav>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

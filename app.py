@@ -6,8 +6,8 @@ from wtforms import StringField, FloatField, DateField, SubmitField, SelectField
 from wtforms.validators import DataRequired
 from datetime import datetime
 import os
-from sqlalchemy import create_engine, inspect, func  # Added func for sums
-import logging  # For debug logs
+from sqlalchemy import create_engine, inspect, func
+import logging
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'  # Change this to a random string for security
@@ -24,7 +24,7 @@ db = SQLAlchemy(app)
 logging.basicConfig(level=logging.INFO)
 app.logger.info(f"Using database URI: {db_uri}")
 
-# Database Models (define before init)
+# Database Models
 class Family(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -85,59 +85,59 @@ else:
 
 # Forms
 class FamilyForm(FlaskForm):
-    name = StringField('Family Name', validators=[DataRequired()])
+    name = StringField('Name', validators=[DataRequired()])
     address = StringField('Address')
     submit = SubmitField('Add Family')
 
 class DistributionForm(FlaskForm):
-    family_id = StringField('Family ID', validators=[DataRequired()])
-    date = DateField('Date', validators=[DataRequired()])
+    family_id = SelectField('Family', coerce=int, validators=[DataRequired()])
+    date = DateField('Date', validators=[DataRequired()], default=datetime.today)
     liters = FloatField('Liters', validators=[DataRequired()])
     amount = FloatField('Amount', validators=[DataRequired()])
     submit = SubmitField('Log Distribution')
 
 class PaymentForm(FlaskForm):
-    family_id = StringField('Family ID', validators=[DataRequired()])
-    date = DateField('Date', validators=[DataRequired()])
+    family_id = SelectField('Family', coerce=int, validators=[DataRequired()])
+    date = DateField('Date', validators=[DataRequired()], default=datetime.today)
     amount_paid = FloatField('Amount Paid', validators=[DataRequired()])
     submit = SubmitField('Record Payment')
 
 class ExpenseForm(FlaskForm):
-    date = DateField('Date', validators=[DataRequired()])
-    category = SelectField('Category', choices=[('Mass', 'Mass'), ('Other Feeds', 'Other Feeds'), ('Medical', 'Medical'), ('Other', 'Other')], validators=[DataRequired()])
+    date = DateField('Date', validators=[DataRequired()], default=datetime.today)
+    category = SelectField('Category', choices=[('Feed', 'Feed'), ('Veterinary', 'Veterinary'), ('Maintenance', 'Maintenance'), ('Labor', 'Labor'), ('Other', 'Other')], validators=[DataRequired()])
     amount = FloatField('Amount', validators=[DataRequired()])
     description = StringField('Description')
     submit = SubmitField('Log Expense')
 
 class CowForm(FlaskForm):
-    name = StringField('Cow Name', validators=[DataRequired()])
+    name = StringField('Name', validators=[DataRequired()])
     age = IntegerField('Age')
     submit = SubmitField('Add Cow')
 
 class MilkForm(FlaskForm):
-    cow_id = StringField('Cow ID', validators=[DataRequired()])
-    date = DateField('Date', validators=[DataRequired()])
+    cow_id = SelectField('Cow', coerce=int, validators=[DataRequired()])
+    date = DateField('Date', validators=[DataRequired()], default=datetime.today)
     liters = FloatField('Liters', validators=[DataRequired()])
     submit = SubmitField('Log Milk')
 
 class FeedForm(FlaskForm):
-    cow_id = StringField('Cow ID', validators=[DataRequired()])
-    date = DateField('Date', validators=[DataRequired()])
+    cow_id = SelectField('Cow', coerce=int, validators=[DataRequired()])
+    date = DateField('Date', validators=[DataRequired()], default=datetime.today)
+    type = SelectField('Type', choices=[('Grass', 'Grass'), ('Hay', 'Hay'), ('Concentrate', 'Concentrate'), ('Silage', 'Silage'), ('Other', 'Other')], validators=[DataRequired()])
     amount = FloatField('Amount', validators=[DataRequired()])
-    type = SelectField('Type', choices=[('Mass', 'Mass'), ('Other Feeds', 'Other Feeds'), ('Medical', 'Medical'), ('Other', 'Other')], validators=[DataRequired()])
     submit = SubmitField('Log Feed')
 
 # Routes
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
     families = Family.query.all()
-    num_families = Family.query.count()
-    total_distributed = db.session.query(func.sum(Distribution.amount)).scalar() or 0
+    num_families = len(families)
+    total_milk = db.session.query(func.sum(MilkProduction.liters)).scalar() or 0
+    total_distributed = db.session.query(func.sum(Distribution.liters)).scalar() or 0
     total_payments = db.session.query(func.sum(Payment.amount_paid)).scalar() or 0
     total_expenses = db.session.query(func.sum(Expense.amount)).scalar() or 0
-    total_milk = db.session.query(func.sum(MilkProduction.liters)).scalar() or 0
     profit = total_payments - total_expenses
-    return render_template('index.html', families=families, num_families=num_families, total_distributed=total_distributed, total_payments=total_payments, total_expenses=total_expenses, profit=profit, total_milk=total_milk)
+    return render_template('index.html', families=families, num_families=num_families, total_milk=total_milk, total_distributed=total_distributed, total_payments=total_payments, total_expenses=total_expenses, profit=profit)
 
 @app.route('/add_family', methods=['GET', 'POST'])
 def add_family():
@@ -152,9 +152,9 @@ def add_family():
 @app.route('/log_distribution', methods=['GET', 'POST'])
 def log_distribution():
     form = DistributionForm()
+    form.family_id.choices = [(f.id, f.name) for f in Family.query.all()]
     if form.validate_on_submit():
-        # Cast family_id to int
-        dist = Distribution(family_id=int(form.family_id.data), date=form.date.data, liters=form.liters.data, amount=form.amount.data)
+        dist = Distribution(family_id=form.family_id.data, date=form.date.data, liters=form.liters.data, amount=form.amount.data)
         db.session.add(dist)
         db.session.commit()
         return redirect(url_for('index'))
@@ -163,9 +163,9 @@ def log_distribution():
 @app.route('/record_payment', methods=['GET', 'POST'])
 def record_payment():
     form = PaymentForm()
+    form.family_id.choices = [(f.id, f.name) for f in Family.query.all()]
     if form.validate_on_submit():
-        # Cast family_id to int
-        payment = Payment(family_id=int(form.family_id.data), date=form.date.data, amount_paid=form.amount_paid.data)
+        payment = Payment(family_id=form.family_id.data, date=form.date.data, amount_paid=form.amount_paid.data)
         db.session.add(payment)
         db.session.commit()
         return redirect(url_for('index'))
@@ -210,8 +210,9 @@ def add_cow():
 @app.route('/log_milk', methods=['GET', 'POST'])
 def log_milk():
     form = MilkForm()
+    form.cow_id.choices = [(c.id, c.name) for c in Cow.query.all()]
     if form.validate_on_submit():
-        milk = MilkProduction(cow_id=int(form.cow_id.data), date=form.date.data, liters=form.liters.data)
+        milk = MilkProduction(cow_id=form.cow_id.data, date=form.date.data, liters=form.liters.data)
         db.session.add(milk)
         db.session.commit()
         return redirect(url_for('cows'))
@@ -220,8 +221,9 @@ def log_milk():
 @app.route('/log_feed', methods=['GET', 'POST'])
 def log_feed():
     form = FeedForm()
+    form.cow_id.choices = [(c.id, c.name) for c in Cow.query.all()]
     if form.validate_on_submit():
-        feed = Feed(cow_id=int(form.cow_id.data), date=form.date.data, amount=form.amount.data, type=form.type.data)
+        feed = Feed(cow_id=form.cow_id.data, date=form.date.data, amount=form.amount.data, type=form.type.data)
         db.session.add(feed)
         db.session.commit()
         return redirect(url_for('cows'))
@@ -231,6 +233,10 @@ def log_feed():
 def cows():
     cows = Cow.query.all()
     return render_template('cows.html', cows=cows)
+
+@app.route('/meal_plan')
+def meal_plan():
+    return render_template('meal_plan.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
