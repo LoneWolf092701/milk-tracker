@@ -1,3 +1,6 @@
+<!-- Filename: add_family.html -->
+<!-- Full path: templates/add_family.html -->
+
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
 <head>
@@ -9,7 +12,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='custom.css') }}">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
             <a class="navbar-brand" href="{{ url_for('index') }}">Milk Tracker</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -47,6 +50,15 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('meal_plan') }}">Meal Plan</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('notifications') }}">Notifications</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('profile') }}">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                    </li>
                 </ul>
             </div>
             <button id="theme-toggle" class="btn btn-outline-secondary ms-auto">
@@ -57,39 +69,29 @@
 
     <div class="container mt-4">
         <h1>Add New Family</h1>
-        <form method="POST">
+        <form method="POST" class="row justify-content-center">
             {{ form.hidden_tag() }}
-            <div class="mb-3">
+            <div class="col-md-6 form-group">
                 {{ form.name.label(class="form-label") }} {{ form.name(class="form-control") }}
             </div>
-            <div class="mb-3">
+            <div class="col-md-6 form-group">
                 {{ form.address.label(class="form-label") }} {{ form.address(class="form-control") }}
             </div>
-            {{ form.submit(class="btn btn-primary") }}
+            <div class="col-md-6">
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
         </form>
         <a href="{{ url_for('index') }}" class="btn btn-secondary mt-3">Back</a>
     </div>
 
     <!-- Mobile Bottom Nav Bar with Icons Only -->
-    <nav class="navbar fixed-bottom bg-light d-lg-none">
+    <nav class="navbar fixed-bottom bg-body-tertiary d-lg-none">
         <ul class="navbar-nav d-flex flex-row w-100 justify-content-around">
             <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('add_family') }}"><i class="bi bi-person-plus-fill"></i></a>
+                <a class="nav-link" href="{{ url_for('index') }}"><i class="bi bi-people-fill"></i></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('log_distribution') }}"><i class="bi bi-box-seam"></i></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('record_payment') }}"><i class="bi bi-cash-stack"></i></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('log_expense') }}"><i class="bi bi-journal-text"></i></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('expenses') }}"><i class="bi bi-bar-chart-line"></i></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('add_cow') }}"><i class="bi bi-plus-circle-fill"></i></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('log_milk') }}"><i class="bi bi-droplet-fill"></i></a>
@@ -98,10 +100,7 @@
                 <a class="nav-link" href="{{ url_for('log_feed') }}"><i class="bi bi-flower1"></i></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('cows') }}"><i class="bi bi-grid"></i></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('meal_plan') }}"><i class="bi bi-apple"></i></a>
+                <a class="nav-link" href="{{ url_for('other') }}"><i class="bi bi-three-dots"></i></a>
             </li>
         </ul>
     </nav>

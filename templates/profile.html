@@ -1,5 +1,5 @@
-<!-- Filename: log_milk.html -->
-<!-- Full path: templates/log_milk.html -->
+<!-- Filename: profile.html -->
+<!-- Full path: templates/profile.html -->
 
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
@@ -68,23 +68,20 @@
     </nav>
 
     <div class="container mt-4">
-        <h1>Log Milk Production</h1>
+        <h1>Profile</h1>
         <form method="POST" class="row justify-content-center">
             {{ form.hidden_tag() }}
             <div class="col-md-6 form-group">
-                {{ form.cow_id.label(class="form-label") }} {{ form.cow_id(class="form-control") }}
+                {{ form.password.label(class="form-label") }} {{ form.password(class="form-control") }}
             </div>
             <div class="col-md-6 form-group">
-                {{ form.date.label(class="form-label") }} {{ form.date(class="form-control") }}
-            </div>
-            <div class="col-md-6 form-group">
-                {{ form.liters.label(class="form-label") }} {{ form.liters(class="form-control") }}
+                {{ form.confirm.label(class="form-label") }} {{ form.confirm(class="form-control") }}
             </div>
             <div class="col-md-6">
                 {{ form.submit(class="btn btn-primary") }}
             </div>
         </form>
-        <a href="{{ url_for('cows') }}" class="btn btn-secondary mt-3">Back to Cows</a>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary mt-3">Back</a>
     </div>
 
     <!-- Mobile Bottom Nav Bar with Icons Only -->

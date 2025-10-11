@@ -1,5 +1,5 @@
-<!-- Filename: log_milk.html -->
-<!-- Full path: templates/log_milk.html -->
+<!-- Filename: index.html -->
+<!-- Full path: templates/index.html -->
 
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
@@ -51,12 +51,6 @@
                         <a class="nav-link" href="{{ url_for('meal_plan') }}">Meal Plan</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('notifications') }}">Notifications</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('profile') }}">Profile</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
                     </li>
                 </ul>
@@ -68,23 +62,51 @@
     </nav>
 
     <div class="container mt-4">
-        <h1>Log Milk Production</h1>
-        <form method="POST" class="row justify-content-center">
-            {{ form.hidden_tag() }}
-            <div class="col-md-6 form-group">
-                {{ form.cow_id.label(class="form-label") }} {{ form.cow_id(class="form-control") }}
+        <h1>Welcome to Milk Tracker</h1>
+        <div class="row mt-4">
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Milk</h5>
+                        <p class="display-4">{{ total_milk }}</p>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6 form-group">
-                {{ form.date.label(class="form-label") }} {{ form.date(class="form-control") }}
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Revenue</h5>
+                        <p class="display-4">{{ total_revenue }}</p>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6 form-group">
-                {{ form.liters.label(class="form-label") }} {{ form.liters(class="form-control") }}
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Expenses</h5>
+                        <p class="display-4">{{ total_expenses }}</p>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6">
-                {{ form.submit(class="btn btn-primary") }}
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Profit</h5>
+                        <p class="display-4">{{ profit }}</p>
+                    </div>
+                </div>
             </div>
-        </form>
-        <a href="{{ url_for('cows') }}" class="btn btn-secondary mt-3">Back to Cows</a>
+        </div>
+
+        <h2>Families</h2>
+        <ul class="list-group">
+            {% for family in families %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ family.name }} (ID: {{ family.id }})
+                <a href="{{ url_for('view_family', family_id=family.id) }}" class="btn btn-primary btn-sm">View Details</a>
+            </li>
+            {% endfor %}
+        </ul>
     </div>
 
     <!-- Mobile Bottom Nav Bar with Icons Only -->
@@ -92,9 +114,6 @@
         <ul class="navbar-nav d-flex flex-row w-100 justify-content-around">
             <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('index') }}"><i class="bi bi-people-fill"></i></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('log_distribution') }}"><i class="bi bi-box-seam"></i></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('log_milk') }}"><i class="bi bi-droplet-fill"></i></a>
